@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Color Slider</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="header">
+    <h1>RGB Color Picker</h1>
+    <p>Made by Zaenal Alfian</p>
+  </div>
+  <div class="container">
+    <div class="color-box" id="colorBox"></div>
+
+    <div class="sliders">
+      <div class="slider">
+        <label for="redRange">Red</label>
+        <input type="range" id="redRange" min="0" max="255" value="0">
+      </div>
+      <div class="slider">
+        <label for="greenRange">Green</label>
+        <input type="range" id="greenRange" min="0" max="255" value="0">
+      </div>
+      <div class="slider">
+        <label for="blueRange">Blue</label>
+        <input type="range" id="blueRange" min="0" max="255" value="0">
+      </div>
+    </div>
+
+    <div class="rgb-output">
+      <input type="text" id="rgbValue" readonly>
+      <button id="copyButton">Copy</button>
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
