@@ -27,6 +27,5 @@ document.addEventListener('DOMContentLoaded', () => {
       alert(`Copied: ${rgbValue.value}`);
   });
 
-  // Initialize with the default values
   updateColor();
 });
