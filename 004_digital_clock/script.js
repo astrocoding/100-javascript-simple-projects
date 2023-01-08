@@ -19,7 +19,7 @@ function playClock() {
   document.getElementById('month').textContent = month;
   document.getElementById('year').textContent = year;
 
-  document.getElementById('time').textContent = `${hours}:${minutes}:${seconds} WIB`;
+  document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
 }
 
 // Perbaharui jam setiap detik
