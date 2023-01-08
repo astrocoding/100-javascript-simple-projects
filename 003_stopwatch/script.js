@@ -11,7 +11,8 @@ function startTimer() {
     startTime = new Date().getTime();
     tInterval = setInterval(updateTimer, 1000);
     running = true;
-    startButton.textContent = "Stop";
+    //startButton.textContent = "Stop";
+    startButton.disable = true;
     pauseButton.disable = false;
     resetButton.disable = false;
     pauseButton.style.backgroundColor = "#F44336";
@@ -24,7 +25,7 @@ function stopTimer() {
   clearInterval(tInterval);
   running = false;
   startButton.textContent = "Start";
-  pauseButton.disable = true;
+  pauseButton.disable = false;
   resetButton.disable = false;
 }
 
