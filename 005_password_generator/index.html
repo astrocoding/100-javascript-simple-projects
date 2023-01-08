@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Generator | Zaenal Alfian</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Password Generator</h1>
+    <div class="strength">
+      <label><input type="radio" name="strength" value="low"> Low</label>
+      <label><input type="radio" name="strength" value="medium" checked> Medium</label>
+      <label><input type="radio" name="strength" value="strong"> Strong</label>
+    </div>
+    <div class="password-box">
+      <input type="text" id="password" readonly placeholder="Your password will appear here">
+      <button id="generate-btn">Generate</button>
+      <button id="copy-btn">Copy</button>
+    </div>
+    <div class="brand">
+      <span>Made by Zaenal Alfian</span>
+    </div>
+  </div>
+</body>
+</html>
