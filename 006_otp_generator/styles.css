@@ -1,0 +1,92 @@
+/* Basic CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #121212;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+}
+
+h1 {
+  color: #00bfff;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+.brand {
+  font-size: 1rem;
+  color: #aaa;
+  margin-bottom: 30px;
+}
+
+button {
+  background-color: #00bfff;
+  color: #121212;
+  border: none;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+button:hover {
+  background-color: #00a3cc;
+}
+
+#otp {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem;
+  border: 2px solid #00bfff;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #00bfff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#otp::placeholder {
+  color: #777;
+}
+
+/* Responsive Styling */
+@media (max-width: 400px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  #otp {
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .brand {
+    font-size: 0.9rem;
+  }
+}
