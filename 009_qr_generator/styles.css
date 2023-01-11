@@ -42,7 +42,7 @@ header p {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 #link-input {
@@ -70,7 +70,9 @@ header p {
 }
 
 .qrcode-container {
-  margin-top: 20px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .qrcode-container canvas {
