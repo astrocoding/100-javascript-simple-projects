@@ -1,0 +1,75 @@
+/* Basic CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #FFFCE8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333;
+}
+
+.container {
+  text-align: center;
+  background-color: #FFEB3B;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #F57C00;
+}
+
+header p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.timer {
+  margin: 20px 0;
+  font-size: 3rem;
+  color: #F57C00;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #F57C00;
+  color: #FFF;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #E65100;
+}
+
+/* Responsive Styles */
+@media (max-width: 400px) {
+  .timer {
+    font-size: 2.5rem;
+  }
+
+  button {
+    width: 45%;
+    font-size: 0.9rem;
+  }
+}
