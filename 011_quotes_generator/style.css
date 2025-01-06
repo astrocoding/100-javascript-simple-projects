@@ -1,0 +1,119 @@
+:root{
+  --bg:#fff0f6;
+  --bg-strong:#ffe3ef;
+  --card:#ffffff;
+  --text:#2d1b2f;
+  --muted:#83596e;
+  --primary:#ff4d8d;
+  --primary-700:#e03a78;
+  --ring:#ffb3cc;
+  --shadow:0 10px 30px rgba(255, 77, 141, .15);
+  --radius:16px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at -10% -10%, var(--bg-strong), transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, #ffd6e7, transparent 55%),
+    var(--bg);
+}
+
+.container{
+  min-height:100%;
+  display:grid;
+  place-items:center;
+  padding:32px 16px;
+}
+
+.card{
+  width:min(720px, 92vw);
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  border:1px solid #ffe0eb;
+}
+
+.quote{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+
+.quote-mark{
+  font-size:28px;
+  color:var(--primary);
+  margin-top:2px;
+}
+
+#quoteText{
+  margin:0;
+  font-size:1.35rem;
+  line-height:1.6;
+  font-weight:600;
+  letter-spacing:.2px;
+}
+
+.author{
+  margin:0;
+  color:var(--muted);
+  font-weight:600;
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid transparent;
+  background:#ffe6f0;
+  color:var(--text);
+  cursor:pointer;
+  transition:transform .06s ease, background .2s ease, border-color .2s ease;
+}
+
+.btn.primary{
+  background:var(--primary);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(255, 77, 141, .3);
+}
+
+.btn.ghost{
+  background:#fff;
+  border-color:#ffd1e1;
+}
+
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:focus{outline:2px solid var(--ring); outline-offset:2px}
+
+.hint{
+  margin:0;
+  font-size:.85rem;
+  color:#9a6f83;
+  text-align:right;
+}
+
+/* animasi kecil saat quote berubah */
+.fade{
+  animation:fade .35s ease;
+}
+@keyframes fade{
+  from{opacity:.2; transform:translateY(4px)}
+  to{opacity:1; transform:translateY(0)}
+}
