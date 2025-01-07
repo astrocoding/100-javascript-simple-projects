@@ -9,15 +9,36 @@
 </head>
 <body>
   <main class="container">
-    <h1>📂 100 JavaScript Simple Projects</h1>
+    <h1>100 JavaScript Simple Projects</h1>
     <p>Pilih proyek yang ingin kamu lihat:</p>
 
-    <ul class="cards">
+    <!-- Toolbar: pencarian + jumlah entri -->
+    <div class="toolbar" role="region" aria-label="Pengaturan daftar">
+      <div class="toolbar-left">
+        <label for="search" class="label">Cari</label>
+        <div class="input-group">
+          <input id="search" class="input" type="text" placeholder="Ketik judul proyek…">
+          <button id="searchBtn" class="btn-search" aria-label="Cari">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </div>
+    
+      <div class="toolbar-right">
+        <label for="perPage" class="label">Entri per halaman</label>
+        <select id="perPage" class="select">
+          <option value="6">6</option>
+          <option value="9">9</option>
+          <option value="12" selected>12</option>
+          <option value="24">24</option>
+        </select>
+      </div>
+    </div>
+
+    <ul class="cards" id="cardsList">
       <li class="card">
         <i class="fa-solid fa-sliders card-icon"></i>
-        <div class="card-content">
-          <h2>001 - RGB Slider</h2>
-        </div>
+        <div class="card-content"><h2>001 - RGB Slider</h2></div>
         <a href="001_rgb_slider/index.html" target="_blank" class="btn">Lihat</a>
       </li>
 
@@ -77,20 +98,24 @@
 
       <li class="card">
         <i class="fa-solid fa-quote-left card-icon"></i>
-        <div class="card-content">
-          <h2>011 - Quotes Generator</h2>
-        </div>
+        <div class="card-content"><h2>011 - Quotes Generator</h2></div>
         <a href="011_quotes_generator/index.html" target="_blank" class="btn">Lihat</a>
       </li>
 
       <li class="card">
         <i class="fa-solid fa-microphone card-icon"></i>
-        <div class="card-content">
-          <h2>012 - Text to Speech</h2>
-        </div>
+        <div class="card-content"><h2>012 - Text to Speech</h2></div>
         <a href="012_text_to_speech/index.html" target="_blank" class="btn">Lihat</a>
       </li>
     </ul>
+
+    <!-- Pagination -->
+    <div class="footerbar">
+      <div class="range-info" id="rangeInfo" aria-live="polite"></div>
+      <nav class="pagination" id="pager" aria-label="Pagination"></nav>
+    </div>
   </main>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

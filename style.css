@@ -95,3 +95,141 @@ p {
   outline: 2px solid #cfe2ff;
   outline-offset: 2px;
 }
+
+.toolbar {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr auto;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: #5b5b5b;
+}
+
+.input-group {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.input {
+  border: 0;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+  outline: none;
+  background: transparent;
+}
+
+.btn-search {
+  border: 0;
+  padding: 0 14px;
+  font-size: 1rem;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-search:hover { filter: brightness(0.92); }
+
+.select {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.toolbar-info {
+  justify-self: end;
+  align-self: center;
+  font-size: 0.92rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+  }
+  .toolbar-info {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 520px) {
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+  .toolbar-right {
+    grid-row: 2;
+  }
+  .toolbar-info {
+    grid-row: 3;
+  }
+}
+
+.footerbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.range-info {
+  font-size: 0.92rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page-btn {
+  min-width: 40px;
+  padding: 8px 12px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.page-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-btn[aria-current="page"] {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .footerbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
