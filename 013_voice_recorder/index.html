@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>013 - Matcha Voice Recorder</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>🍵 Matcha Voice Recorder</h1>
+      <p class="subtitle">Rekam suara, lihat waveform, simpan & bagikan—semuanya di browser.</p>
+    </header>
+
+    <section class="panel">
+      <div class="controls">
+        <button id="btnRecord" class="btn primary">
+          <i class="fa-solid fa-microphone"></i><span>Rekam</span>
+        </button>
+        <button id="btnPause" class="btn ghost" disabled>
+          <i class="fa-solid fa-pause"></i><span>Jeda</span>
+        </button>
+        <button id="btnStop" class="btn danger" disabled>
+          <i class="fa-solid fa-stop"></i><span>Stop</span>
+        </button>
+        <div class="timer" id="timer">00:00</div>
+      </div>
+
+      <div class="visual">
+        <canvas id="wave" width="900" height="160" aria-label="Waveform audio"></canvas>
+      </div>
+      <p class="hint">Tips: Tombol cepat — R: Rekam/Stop, P: Jeda/Lanjut</p>
+    </section>
+
+    <section class="list">
+      <h2 class="list-title"><i class="fa-solid fa-list"></i> Rekaman</h2>
+      <ul id="clips" class="clips" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
