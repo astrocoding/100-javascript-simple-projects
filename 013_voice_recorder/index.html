@@ -11,7 +11,7 @@
   <main class="container">
     <header class="header">
       <h1>🍵 Matcha Voice Recorder</h1>
-      <p class="subtitle">Rekam suara, lihat waveform, simpan & bagikan—semuanya di browser.</p>
+      <p class="subtitle">Rekam suara, lihat waveform, simpan & bagikan semuanya di browser.</p>
     </header>
 
     <section class="panel">
@@ -25,13 +25,23 @@
         <button id="btnStop" class="btn danger" disabled>
           <i class="fa-solid fa-stop"></i><span>Stop</span>
         </button>
+
+        <!-- Format unduhan -->
+        <div class="format">
+          <label for="format" class="fmt-label"><i class="fa-solid fa-file-audio"></i> Format</label>
+          <select id="format" class="fmt-select">
+            <option value="webm" selected>WEBM</option>
+            <option value="wav">WAV (paling kompatibel)</option>
+          </select>
+        </div>
+
         <div class="timer" id="timer">00:00</div>
       </div>
 
       <div class="visual">
         <canvas id="wave" width="900" height="160" aria-label="Waveform audio"></canvas>
       </div>
-      <p class="hint">Tips: Tombol cepat — R: Rekam/Stop, P: Jeda/Lanjut</p>
+      <p class="hint">Tips: Shortcut — R: Rekam/Stop, P: Jeda/Lanjut</p>
     </section>
 
     <section class="list">

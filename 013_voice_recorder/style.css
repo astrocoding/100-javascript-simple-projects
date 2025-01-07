@@ -1,4 +1,4 @@
-:root{
+:root {
   --bg:#f3f7f4;
   --card:#ffffff;
   --ink:#2f3b2f;
@@ -12,9 +12,9 @@
   --radius:16px;
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
+* { box-sizing:border-box }
+html,body{ height:100% }
+body {
   margin:0;
   font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
   color:var(--ink);
@@ -24,7 +24,7 @@ body{
     var(--bg);
 }
 
-.container{
+.container {
   max-width:920px;
   margin:0 auto;
   padding:28px 16px 40px;
@@ -32,10 +32,10 @@ body{
   gap:18px;
 }
 
-.header h1{margin:0 0 6px 0; font-size:1.8rem}
-.subtitle{margin:0; color:var(--muted)}
+.header h1 { margin:0 0 6px 0; font-size:1.8rem }
+.subtitle { margin:0; color:var(--muted) }
 
-.panel{
+.panel {
   background:var(--card);
   border:1px solid #e4efe6;
   border-radius:var(--radius);
@@ -45,14 +45,14 @@ body{
   gap:12px;
 }
 
-.controls{
-  display:grid;
-  grid-template-columns:auto auto auto 1fr;
-  gap:10px;
+.controls {
+  display:flex;
+  flex-wrap:wrap;
   align-items:center;
+  gap:10px 12px;
 }
 
-.btn{
+.btn {
   display:inline-flex;
   align-items:center;
   gap:8px;
@@ -64,47 +64,73 @@ body{
   cursor:pointer;
   transition:transform .06s ease, filter .2s ease, background .2s ease, border-color .2s ease;
 }
-.btn:hover{transform:translateY(-1px)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.6; cursor:not-allowed}
-.btn:focus{outline:2px solid var(--ring); outline-offset:2px}
+.btn:hover { transform:translateY(-1px) }
+.btn:active { transform:translateY(0) }
+.btn:disabled { opacity:.6; cursor:not-allowed }
+.btn:focus { outline:2px solid var(--ring); outline-offset:2px }
 
-.btn.primary{background:var(--primary); color:#fff; box-shadow:0 6px 16px rgba(77,165,98,.28)}
-.btn.ghost{background:#fff; border-color:#dfe9e2}
-.btn.danger{background:#fff; border-color:#ffd6d6; color:#b23b3b}
+.btn.primary { background:var(--primary); color:#fff; box-shadow:0 6px 16px rgba(77,165,98,.28) }
+.btn.ghost { background:#fff; border-color:#dfe9e2 }
+.btn.danger { background:#fff; border-color:#ffd6d6; color:#b23b3b }
 
-.timer{
-  justify-self:end;
+.format {
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.fmt-label {
+  font-size:.9rem;
+  color:var(--muted);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.fmt-select {
+  height:38px;
+  padding:0 10px;
+  border:1px solid #dfe9e2;
+  border-radius:8px;
+  font-size:.95rem;
+}
+
+.timer {
   font-weight:700;
   letter-spacing:.5px;
   padding:8px 12px;
-  border-radius:10px;
+  border-radius:8px;
   background:#f3fbf5;
   border:1px solid #e3efe6;
   color:#2f5d50;
 }
 
-.visual{
+.visual {
   background:linear-gradient(180deg,#f7fbf8,#ffffff);
   border:1px solid #e8f1eb;
   border-radius:12px;
   padding:10px;
 }
 
-#wave{width:100%; height:160px; display:block}
+#wave { width:100%; height:160px; display:block }
 
-.hint{margin:0; color:#7c8b80; font-size:.9rem}
+.hint { margin:0; color:#7c8b80; font-size:.9rem }
 
-.list{
+.list {
   background:var(--card);
   border:1px solid #e4efe6;
   border-radius:var(--radius);
   box-shadow:var(--shadow);
   padding:18px;
 }
-.list-title{margin:0 0 10px 0; font-size:1.1rem; display:flex; gap:8px; align-items:center}
+.list-title { margin:0 0 10px 0;
+  font-size:1.1rem;
+  display:flex;
+  gap:8px;
+  align-items:center
+}
 
-.clips{
+.clips {
   list-style:none;
   margin:0;
   padding:0;
@@ -113,7 +139,7 @@ body{
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 }
 
-.clip{
+.clip {
   display:grid;
   grid-template-columns:1fr auto auto auto;
   gap:10px;
@@ -124,8 +150,9 @@ body{
   background:#fcfffd;
 }
 
-.clip audio{width:100%}
-.badge{
+.clip audio { width:100% }
+
+.badge {
   font-size:.82rem;
   color:#2f5d50;
   background:#eaf6ee;
@@ -134,16 +161,17 @@ body{
   border:1px solid #d9ece1;
 }
 
-.icon-btn{
+.icon-btn {
   width:36px; height:36px;
   display:inline-grid; place-items:center;
   border-radius:10px; border:1px solid #dfe9e2;
   background:#fff; color:#2f5d50; cursor:pointer;
 }
-.icon-btn:hover{filter:brightness(.95)}
-.icon-btn.danger{border-color:#ffd6d6; color:#b23b3b}
+.icon-btn:hover { filter:brightness(.95) }
+.icon-btn.danger { border-color:#ffd6d6; color:#b23b3b }
 
-@media (max-width:600px){
-  .controls{grid-template-columns:auto auto auto auto}
-  .timer{justify-self:start}
+@media (max-width:600px) {
+  .controls{flex-direction:column; align-items:flex-start;}
+  .format{width:100%;}
+  .timer{align-self:flex-start; margin-top:6px;}
 }

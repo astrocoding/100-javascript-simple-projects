@@ -5,6 +5,7 @@
   const timerEl   = document.getElementById('timer');
   const clipsEl   = document.getElementById('clips');
   const canvas    = document.getElementById('wave');
+  const formatSel = document.getElementById('format');
   const ctx       = canvas.getContext('2d');
 
   let mediaStream = null;
@@ -13,8 +14,12 @@
   let timer = null;
   let seconds = 0;
 
-  // Audio graph for waveform
+  // Audio graph + PCM collector (untuk WAV)
   let audioCtx, sourceNode, analyser, dataArray, rafId;
+  let procNode;
+  let pcmBuffers = [];
+  let pcmLength = 0;
+  let sampleRate = 44100;
 
   function formatTime(sec){
     const m = String(Math.floor(sec/60)).padStart(2,'0');
@@ -70,17 +75,38 @@
   async function startRecording(){
     await initStream();
     chunks = [];
+    pcmBuffers = [];
+    pcmLength = 0;
 
     // setup audio graph
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    sampleRate = audioCtx.sampleRate;
     sourceNode = audioCtx.createMediaStreamSource(mediaStream);
+
+    // analyser for waveform
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 2048;
     dataArray = new Uint8Array(analyser.frequencyBinCount);
     sourceNode.connect(analyser);
     drawWave();
 
-    mediaRecorder = new MediaRecorder(mediaStream);
+    // ScriptProcessorNode to grab PCM (mono)
+    const bufferSize = 4096;
+    procNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+    sourceNode.connect(procNode);
+    procNode.connect(audioCtx.destination);
+    procNode.onaudioprocess = (e) => {
+      const input = e.inputBuffer.getChannelData(0);
+      const copy = new Float32Array(input.length);
+      copy.set(input);
+      pcmBuffers.push(copy);
+      pcmLength += copy.length;
+    };
+
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : 'audio/webm';
+    mediaRecorder = new MediaRecorder(mediaStream, { mimeType: mime });
     mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
     mediaRecorder.onstop = handleStop;
     mediaRecorder.start();
@@ -114,16 +140,38 @@
     btnPause.disabled = true;
     btnStop.disabled = true;
     stopTimer();
+
     cancelAnimationFrame(rafId);
     rafId = null;
-    if (audioCtx) audioCtx.close();
-    audioCtx = null;
+
+    if (procNode){
+      try { procNode.disconnect(); } catch {}
+      procNode = null;
+    }
+    if (audioCtx){
+      audioCtx.close();
+      audioCtx = null;
+    }
   }
 
   function handleStop(){
-    const blob = new Blob(chunks, { type: 'audio/webm' });
-    const url = URL.createObjectURL(blob);
     const created = new Date();
+
+    const fmt = (formatSel.value || 'webm').toLowerCase();
+
+    let blob, url, filename, mime;
+    if (fmt === 'wav'){
+      const wavBuffer = encodeWAV(mergePCM(pcmBuffers, pcmLength), sampleRate);
+      blob = new Blob([wavBuffer], { type: 'audio/wav' });
+      url = URL.createObjectURL(blob);
+      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.wav`;
+      mime = 'audio/wav';
+    } else {
+      blob = new Blob(chunks, { type: 'audio/webm' });
+      url = URL.createObjectURL(blob);
+      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.webm`;
+      mime = 'audio/webm';
+    }
 
     const li = document.createElement('li');
     li.className = 'clip';
@@ -131,10 +179,11 @@
     const audio = document.createElement('audio');
     audio.controls = true;
     audio.src = url;
+    audio.type = mime;
 
     const badge = document.createElement('span');
     badge.className = 'badge';
-    badge.textContent = `${formatTime(seconds)} · ${created.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+    badge.textContent = `${formatTime(seconds)} · ${created.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} · ${fmt.toUpperCase()}`;
 
     const btnDownload = document.createElement('button');
     btnDownload.className = 'icon-btn';
@@ -143,7 +192,7 @@
     btnDownload.addEventListener('click', () => {
       const a = document.createElement('a');
       a.href = url;
-      a.download = `recording-${created.toISOString().replace(/[:.]/g,'-')}.webm`;
+      a.download = filename;
       a.click();
     });
 
@@ -157,7 +206,54 @@
     });
 
     li.append(audio, badge, btnDownload, btnDelete);
-    clipsEl.prepend(li); // yang baru di atas
+    clipsEl.prepend(li);
+  }
+
+  // Gabungkan seluruh PCM chunk jadi satu Float32Array
+  function mergePCM(buffers, totalLength){
+    const out = new Float32Array(totalLength);
+    let offset = 0;
+    for (const b of buffers){
+      out.set(b, offset);
+      offset += b.length;
+    }
+    return out;
+  }
+
+  // Encode PCM Float32 (mono) -> WAV (16-bit PCM)
+  function encodeWAV(samples, sampleRate){
+    const buffer = new ArrayBuffer(44 + samples.length * 2);
+    const view = new DataView(buffer);
+
+    function writeString(offset, str){
+      for (let i = 0; i < str.length; i++){
+        view.setUint8(offset + i, str.charCodeAt(i));
+      }
+    }
+
+    // RIFF header
+    writeString(0, 'RIFF');
+    view.setUint32(4, 36 + samples.length * 2, true);
+    writeString(8, 'WAVE');
+    writeString(12, 'fmt ');
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeString(36, 'data');
+    view.setUint32(40, samples.length * 2, true);
+
+    // PCM data
+    let offset = 44;
+    for (let i = 0; i < samples.length; i++){
+      let s = Math.max(-1, Math.min(1, samples[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+    return buffer;
   }
 
   btnRecord.addEventListener('click', startRecording);
