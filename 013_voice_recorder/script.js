@@ -78,7 +78,6 @@
     pcmBuffers = [];
     pcmLength = 0;
 
-    // setup audio graph
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     sampleRate = audioCtx.sampleRate;
     sourceNode = audioCtx.createMediaStreamSource(mediaStream);
@@ -90,7 +89,6 @@
     sourceNode.connect(analyser);
     drawWave();
 
-    // ScriptProcessorNode to grab PCM (mono)
     const bufferSize = 4096;
     procNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
     sourceNode.connect(procNode);
@@ -154,27 +152,10 @@
     }
   }
 
-  function handleStop(){
-    const created = new Date();
-
-    const fmt = (formatSel.value || 'webm').toLowerCase();
-
-    let blob, url, filename, mime;
-    if (fmt === 'wav'){
-      const wavBuffer = encodeWAV(mergePCM(pcmBuffers, pcmLength), sampleRate);
-      blob = new Blob([wavBuffer], { type: 'audio/wav' });
-      url = URL.createObjectURL(blob);
-      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.wav`;
-      mime = 'audio/wav';
-    } else {
-      blob = new Blob(chunks, { type: 'audio/webm' });
-      url = URL.createObjectURL(blob);
-      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.webm`;
-      mime = 'audio/webm';
-    }
-
+  function createClipElement({ id, url, mime, duration, created, filename, fmtLabel }) {
     const li = document.createElement('li');
     li.className = 'clip';
+    if (id) li.dataset.id = id;
 
     const audio = document.createElement('audio');
     audio.controls = true;
@@ -183,7 +164,7 @@
 
     const badge = document.createElement('span');
     badge.className = 'badge';
-    badge.textContent = `${formatTime(seconds)} · ${created.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} · ${fmt.toUpperCase()}`;
+    badge.textContent = `${formatTime(duration)} · ${created.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} · ${fmtLabel}`;
 
     const btnDownload = document.createElement('button');
     btnDownload.className = 'icon-btn';
@@ -201,15 +182,57 @@
     btnDelete.title = 'Hapus';
     btnDelete.innerHTML = '<i class="fa-solid fa-trash"></i>';
     btnDelete.addEventListener('click', () => {
+      if (li.dataset.id) window.MVRStorage?.removeClip(li.dataset.id);
       URL.revokeObjectURL(url);
       li.remove();
     });
 
     li.append(audio, badge, btnDownload, btnDelete);
+    return li;
+  }
+
+  async function handleStop(){
+    const created = new Date();
+    const fmt = (formatSel.value || 'webm').toLowerCase();
+
+    let blob, url, filename, mime;
+    if (fmt === 'wav'){
+      const wavBuffer = encodeWAV(mergePCM(pcmBuffers, pcmLength), sampleRate);
+      blob = new Blob([wavBuffer], { type: 'audio/wav' });
+      mime = 'audio/wav';
+      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.wav`;
+    } else {
+      blob = new Blob(chunks, { type: 'audio/webm' });
+      mime = 'audio/webm';
+      filename = `recording-${created.toISOString().replace(/[:.]/g,'-')}.webm`;
+    }
+    url = URL.createObjectURL(blob);
+
+    let id = null;
+    try {
+      id = await window.MVRStorage?.saveClip({
+        blob,
+        mime,
+        duration: seconds,
+        createdISO: created.toISOString(),
+        filename
+      });
+    } catch (e) {
+      console.warn('Gagal menyimpan ke LocalStorage:', e);
+    }
+
+    const li = createClipElement({
+      id,
+      url,
+      mime,
+      duration: seconds,
+      created,
+      filename,
+      fmtLabel: (fmt.toUpperCase())
+    });
     clipsEl.prepend(li);
   }
 
-  // Gabungkan seluruh PCM chunk jadi satu Float32Array
   function mergePCM(buffers, totalLength){
     const out = new Float32Array(totalLength);
     let offset = 0;
@@ -220,7 +243,6 @@
     return out;
   }
 
-  // Encode PCM Float32 (mono) -> WAV (16-bit PCM)
   function encodeWAV(samples, sampleRate){
     const buffer = new ArrayBuffer(44 + samples.length * 2);
     const view = new DataView(buffer);
@@ -256,11 +278,35 @@
     return buffer;
   }
 
+  // Restore dari LocalStorage saat load
+  (async function restoreOnLoad(){
+    try {
+      const saved = await window.MVRStorage?.restoreClips();
+      if (!saved || !Array.isArray(saved)) return;
+
+      for (const it of saved) {
+        const url = URL.createObjectURL(it.blob);
+        const created = new Date(it.createdISO);
+        const li = createClipElement({
+          id: it.id,
+          url,
+          mime: it.mime,
+          duration: it.duration,
+          created,
+          filename: it.filename,
+          fmtLabel: (it.mime === 'audio/wav' ? 'WAV' : 'WEBM')
+        });
+        clipsEl.prepend(li);
+      }
+    } catch (e) {
+      console.warn('Gagal memulihkan rekaman dari LocalStorage:', e);
+    }
+  })();
+
   btnRecord.addEventListener('click', startRecording);
   btnPause .addEventListener('click', pauseResume);
   btnStop  .addEventListener('click', stopRecording);
 
-  // Keyboard shortcuts: R = rekam/stop, P = jeda/lanjut
   window.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
     if (k === 'r'){
