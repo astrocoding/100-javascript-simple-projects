@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>014 - Video Player</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>🎬 My Player</h1>
+      <p class="subtitle">Custom video player responsif dengan kontrol lengkap.</p>
+    </header>
+
+    <section class="player-card">
+      <div class="player-wrap">
+        <video
+          id="video"
+          class="video"
+          preload="metadata"
+          poster="./media/thumbnail.jpg"
+          playsinline
+        >
+          <!-- Default FHD -->
+          <source src="./media/sample.mp4" type="video/mp4" data-res="1080">
+        </video>
+
+        <!-- Overlay tombol play di poster -->
+        <button id="overlayPlay" class="overlay-play" aria-label="Play">
+          <i class="fa-solid fa-play"></i>
+        </button>
+      </div>
+
+      <div class="controls">
+        <div class="row row-top">
+          <div class="left-group">
+            <button id="btnPrev10" class="icon-btn" title="Mundur 10s">
+              <i class="fa-solid fa-backward" style="font-size:1.3em;margin-right:4px;"></i> <span class="hide-sm">10s</span>
+            </button>
+            <button id="btnPlay" class="primary-btn" title="Play/Pause">
+              <i class="fa-solid fa-play"></i>
+              <span class="hide-sm">Play</span>
+            </button>
+            <button id="btnNext10" class="icon-btn" title="Maju 10s">
+              <span class="hide-sm">10s</span> <i class="fa-solid fa-forward" style="font-size:1.3em;margin-left:4px;"></i>
+            </button>
+          </div>
+
+          <div class="center-group time">
+            <span id="curTime">00:00</span>
+            <span class="sep">/</span>
+            <span id="durTime">00:00</span>
+          </div>
+
+          <div class="right-group">
+            <div class="res-group">
+              <label for="resSelect"><i class="fa-solid fa-signal"></i></label>
+              <select id="resSelect">
+                <option value="1080" selected>FHD</option>
+                <option value="720">720p</option>
+                <option value="480">480p</option>
+                <option value="360">360p</option>
+              </select>
+            </div>
+
+            <div class="speed-group">
+              <button id="btnSpeedDown" class="icon-btn" title="Perlambat"><i class="fa-solid fa-minus"></i></button>
+              <span id="speedLabel" title="Kecepatan">1.0×</span>
+              <button id="btnSpeedUp" class="icon-btn" title="Percepat"><i class="fa-solid fa-plus"></i></button>
+            </div>
+
+            <button id="btnShare" class="icon-btn" title="Bagikan">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="row row-bottom">
+          <div class="timeline">
+            <div class="buffered" id="bufferedBar"></div>
+            <input id="seek" class="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+            <div id="thumb" class="thumb" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>

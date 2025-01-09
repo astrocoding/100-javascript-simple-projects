@@ -1,0 +1,184 @@
+:root{
+  --bg:#f7f6fb;
+  --card:#fff;
+  --ink:#3a3652;
+  --muted:#7b7594;
+  --primary:#a78bfa;
+  --primary-700:#7c5df6;
+  --ring:#dfd6ff;
+  --accent:#e9e6ff;
+  --danger:#ef9a9a;
+  --radius:16px;
+  --shadow:0 8px 28px rgba(72,61,139,.12);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 600px at -10% -10%, #f0eefe, transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, #efeaff, transparent 55%),
+    var(--bg);
+}
+
+.container{
+  max-width:980px;
+  margin:0 auto;
+  padding:28px 16px 40px;
+  display:grid;
+  gap:18px;
+}
+
+.header h1{margin:0 0 6px 0; font-size:1.8rem}
+.subtitle{margin:0; color:var(--muted)}
+
+.player-card{
+  background:var(--card);
+  border:1px solid #eee8ff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:14px;
+  display:grid;
+  gap:12px;
+}
+
+.player-wrap{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  background:#000;
+  aspect-ratio:16/9;
+}
+
+.video{
+  width:100%;
+  height:100%;
+  display:block;
+  background:#000;
+  object-fit:contain;
+}
+
+.overlay-play{
+  position:absolute;
+  inset:auto auto 16px 16px;
+  display:inline-grid;
+  place-items:center;
+  width:56px; height:56px;
+  border-radius:50%;
+  border:none;
+  background:rgba(167,139,250,.95);
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
+}
+.overlay-play i{font-size:1.2rem}
+.overlay-play:focus{outline:2px solid var(--ring); outline-offset:2px}
+
+.controls{
+  display:grid;
+  gap:10px;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+
+.left-group, .center-group, .right-group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.primary-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  background:var(--primary);
+  color:#fff;
+  cursor:pointer;
+  transition:transform .06s ease, filter .2s ease, background .2s ease;
+}
+.primary-btn:hover{filter:brightness(.95)}
+.primary-btn:active{transform:translateY(1px)}
+.primary-btn:focus{outline:2px solid var(--ring); outline-offset:2px}
+
+.icon-btn{
+  width:38px; height:38px;
+  display:inline-grid; place-items:center;
+  border-radius:10px;
+  border:1px solid #e6e0ff;
+  background:#fff;
+  color:#5c4fb8;
+  cursor:pointer;
+}
+.icon-btn:hover{filter:brightness(.96)}
+.icon-btn:active{transform:translateY(1px)}
+.icon-btn:focus{outline:2px solid var(--ring); outline-offset:2px}
+
+.time{color:#6a6590; font-weight:600}
+.sep{opacity:.6; margin:0 2px}
+
+.res-group, .speed-group{
+  display:flex; align-items:center; gap:8px;
+}
+.res-group select{
+  height:38px; border:1px solid #e6e0ff; border-radius:8px;
+  padding:0 10px; background:#fff; color:var(--ink);
+}
+
+#speedLabel{
+  min-width:42px; text-align:center; font-weight:700; color:#5c4fb8;
+}
+
+/* Timeline */
+.timeline{
+  position:relative;
+  width:100%;
+  height:18px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#f4f1ff,#ffffff);
+  border:1px solid #ece8ff;
+  padding:5px 0;
+  overflow:hidden;
+}
+.seek{
+  -webkit-appearance:none; appearance:none;
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  background:transparent; margin:0;
+}
+.seek::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:0; height:0; /* sembunyikan thumb asli */
+}
+.seek::-moz-range-thumb{ width:0; height:0; border:0; }
+
+.buffered{
+  position:absolute; top:0; left:0; height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#d8d1ff,#efeaff);
+}
+.thumb{
+  position:absolute; top:50%; left:0%;
+  transform:translate(-50%,-50%);
+  width:14px; height:14px; border-radius:50%;
+  background:var(--primary);
+  box-shadow:0 0 0 3px rgba(167,139,250,.25);
+  pointer-events:none;
+}
+
+/* Utilities */
+.hide-sm{ display:inline }
+@media (max-width:560px){
+  .hide-sm{ display:none }
+}
