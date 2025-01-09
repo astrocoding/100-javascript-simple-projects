@@ -1,0 +1,7 @@
+014_video_player/media/.DS_Store
+.DS_Store
+.idea/
+node_modules/
+.env
+package-lock.json
+.vscode/
