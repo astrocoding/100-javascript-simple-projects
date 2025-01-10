@@ -1,12 +1,15 @@
 (() => {
-  const input     = document.getElementById('input');
-  const fromBase  = document.getElementById('fromBase');
-  const toBase    = document.getElementById('toBase');
-  const btnConvert= document.getElementById('btnConvert');
-  const btnReset  = document.getElementById('btnReset');
-  const btnSwap   = document.getElementById('btnSwap');
-  const output    = document.getElementById('output');
-  const btnCopy   = document.getElementById('btnCopy');
+  const input      = document.getElementById('input');
+  const fromBaseEl = document.getElementById('fromBase');
+  const toBaseEl   = document.getElementById('toBase');
+  const btnConvert = document.getElementById('btnConvert');
+  const btnReset   = document.getElementById('btnReset');
+  const btnSwap    = document.getElementById('btnSwap');
+  const output     = document.getElementById('output');
+  const btnCopy    = document.getElementById('btnCopy');
+
+  const lintChips  = document.getElementById('lintChips');
+  const detectedBadge = document.getElementById('detectedBadge');
 
   /* ---------- Util UI ---------- */
   function toast(msg){
@@ -17,141 +20,214 @@
     setTimeout(()=>el.remove(), 2200);
   }
 
-  function normSplit(str){
-    // Pisah spasi/koma/baris → array string non-kosong
+  function normSplitRaw(str){
     return str
-      .replace(/\s+/g,' ')       // rapikan spasi berlebih
-      .replace(/,/g,' ')         // koma jadi spasi
+      .replace(/\s+/g,' ')
+      .replace(/,/g,' ')
       .trim()
       .split(' ')
       .filter(Boolean);
   }
 
-  function toChunksOf(str, size){
-    const out = [];
-    for (let i=0;i<str.length;i+=size){
-      out.push(str.slice(i, i+size));
-    }
-    return out;
+  function stripPrefixes(token){
+    // Hilangkan 0b / 0o / 0x (untuk deteksi & validasi)
+    if (/^0[bB][01]+$/.test(token)) return token.slice(2);
+    if (/^0[oO][0-7]+$/.test(token)) return token.slice(2);
+    if (/^0[xX][0-9a-fA-F]+$/.test(token)) return token.slice(2);
+    return token;
   }
 
-  function isValidForBase(token, base){
-    const maps = {
-      bin: /^[01]+$/i,
-      oct: /^[0-7]+$/i,
-      dec: /^-?\d+$/,
-      hex: /^[0-9a-f]+$/i
-    };
-    return maps[base].test(token);
-  }
-
-  /* ---------- Konversi Inti ---------- */
+  const re = {
+    bin: /^[01]+$/i,
+    oct: /^[0-7]+$/i,
+    dec: /^-?\d+$/,
+    hex: /^[0-9a-f]+$/i
+  };
   const baseRadix = { bin:2, oct:8, dec:10, hex:16 };
 
-  function parseFromBaseTokens(tokens, base){
-    // tokens: ["1010","1111"] → [10,15] (Integer)
-    const radix = baseRadix[base];
-    return tokens.map(t => parseInt(t, radix));
+  function detectBase(tokens){
+    let prefType = null;
+    let prefCount = { bin:0, oct:0, hex:0 };
+    for (const t of tokens){
+      if (/^0[bB][01]+$/.test(t)) { prefType = 'bin'; prefCount.bin++; }
+      else if (/^0[oO][0-7]+$/.test(t)) { prefType = 'oct'; prefCount.oct++; }
+      else if (/^0[xX][0-9a-fA-F]+$/.test(t)) { prefType = 'hex'; prefCount.hex++; }
+    }
+    const maxPref = Object.entries(prefCount).sort((a,b)=>b[1]-a[1])[0];
+    if (maxPref && maxPref[1] > 0) return maxPref[0];
+
+    const stripped = tokens.map(stripPrefixes);
+    const all = s => stripped.every(x => re[s].test(x));
+
+    if (all('bin')) return 'bin';
+    if (all('oct')) return 'oct';
+    if (all('dec')) return 'dec';
+    if (all('hex')) return 'hex';
+
+    return null;
   }
 
-  function toTargetBaseStrings(ints, base){
-    const radix = baseRadix[base];
-    return ints.map(n => {
-      if (!Number.isFinite(n)) return 'NaN';
-      let s = n.toString(radix);
-      if (base === 'hex') s = s.toUpperCase();
-      return s;
+  function validateTokens(tokens, base){
+    if (base === 'ascii'){
+      return tokens.map(t => ({ token:t, ok:true }));
+    }
+    const checker = re[base];
+    return tokens.map(t => {
+      const s = stripPrefixes(t);
+      return { token:t, ok: checker.test(s) };
     });
+  }
+
+  function renderChips(tokens, base, specialHint = ''){
+    lintChips.innerHTML = '';
+    for (const { token, ok } of validateTokens(tokens, base)){
+      const chip = document.createElement('span');
+      chip.className = 'chip' + (ok ? '' : ' bad');
+      chip.innerHTML = `<span class="chip-label">${escapeHtml(token)}</span>`;
+      lintChips.appendChild(chip);
+    }
+    if (specialHint){
+      const note = document.createElement('span');
+      note.className = 'chip bad';
+      note.textContent = specialHint;
+      lintChips.appendChild(note);
+    }
+  }
+
+  function setDetectedBadge(text){
+    detectedBadge.textContent = `Detected: ${text}`;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function toChunksOf(str, size){
+    const out = [];
+    for (let i=0;i<str.length;i+=size) out.push(str.slice(i,i+size));
+    return out;
   }
 
   function asciiToInts(str){
     const ints = [];
-    for (const ch of str){
-      ints.push(ch.codePointAt(0));
-    }
+    for (const ch of str) ints.push(ch.codePointAt(0));
     return ints;
   }
-
   function intsToAscii(ints){
-    try{
-      return ints.map(n => String.fromCodePoint(n)).join('');
-    }catch{
-      return null; // invalid codepoint
-    }
+    try{ return ints.map(n => String.fromCodePoint(n)).join(''); }
+    catch{ return null; }
   }
 
   function binaryStringToIntsForAscii(raw){
-    // Bisa: "01001000 01101001" atau "0100100001101001"
     const compact = raw.replace(/\s+/g,'');
     if (!/^[01]*$/.test(compact)) return null;
-    // auto pad kiri agar kelipatan 8 (opsional—di sini kita **tidak pad**; jika tak kelipatan, tolak)
-    if (compact.length % 8 !== 0) return null;
+    if (compact.length % 8 !== 0) return { ints:null, err:'Binary→ASCII harus kelipatan 8 bit' };
     const bytes = toChunksOf(compact, 8);
-    return bytes.map(b => parseInt(b, 2));
+    return { ints: bytes.map(b => parseInt(b, 2)), err:null };
   }
 
-  function tokensToIntsForAscii(tokens, srcBase){
-    if (srcBase === 'bin'){
-      // tokens bisa ["01001000","01101001"] atau satu token panjang → gabung lalu pecah per 8
-      const joined = tokens.join('');
-      const ints = binaryStringToIntsForAscii(joined);
-      return ints; // bisa null jika invalid
-    }
-    const radix = baseRadix[srcBase];
-    const ints = [];
-    for (const t of tokens){
-      if (!isValidForBase(t, srcBase)) return null;
-      const v = parseInt(t, radix);
-      if (!Number.isFinite(v)) return null;
-      ints.push(v);
-    }
-    return ints;
+  function parseIntTokens(tokens, base){
+    const radix = baseRadix[base];
+    return tokens.map(t => parseInt(stripPrefixes(t), radix));
+  }
+  function toBaseStrings(ints, base){
+    const radix = baseRadix[base];
+    return ints.map(n => {
+      if (!Number.isFinite(n)) return 'NaN';
+      let s = n.toString(radix);
+      return base === 'hex' ? s.toUpperCase() : s;
+    });
   }
 
   function convert(inputStr, from, to){
-    // ASCII ↔ basis lain
-    if (from === 'ascii' && to === 'ascii'){
-      return inputStr; // identitas
-    }
+    if (from === 'ascii' && to === 'ascii') return inputStr;
 
-    // 1) FROM ASCII → TO basis
     if (from === 'ascii' && to !== 'ascii'){
       const ints = asciiToInts(inputStr);
-      return toTargetBaseStrings(ints, to).join(' ');
+      return toBaseStrings(ints, to).join(' ');
     }
 
-    const tokens = normSplit(inputStr);
-
-    // 2) FROM basis → TO ASCII
+    const rawTokens = normSplitRaw(inputStr);
     if (from !== 'ascii' && to === 'ascii'){
-      if (tokens.length === 0) return '';
-      const ints = tokensToIntsForAscii(tokens, from);
-      if (!ints) throw new Error('Input tidak valid untuk dikonversi ke ASCII.\n• Binary ke ASCII harus kelipatan 8 bit.\n• Pastikan token sesuai base sumber.');
-      const str = intsToAscii(ints);
-      if (str == null) throw new Error('Kode karakter di luar rentang Unicode.');
-      return str;
+      if (rawTokens.length === 0) return '';
+      if (from === 'bin'){
+        const joined = rawTokens.join('');
+        const { ints, err } = binaryStringToIntsForAscii(joined);
+        if (!ints) throw new Error(err || 'Input tidak valid untuk Binary→ASCII.');
+        const str = intsToAscii(ints);
+        if (str == null) throw new Error('Kode karakter di luar rentang Unicode.');
+        return str;
+      } else {
+        for (const { ok, token } of validateTokens(rawTokens, from)){
+          if (!ok) throw new Error(`Token '${token}' tidak valid untuk base ${from.toUpperCase()}`);
+        }
+        const ints = parseIntTokens(rawTokens, from);
+        const str = intsToAscii(ints);
+        if (str == null) throw new Error('Kode karakter di luar rentang Unicode.');
+        return str;
+      }
     }
 
-    // 3) FROM basis → TO basis
     if (from !== 'ascii' && to !== 'ascii'){
-      if (tokens.length === 0) return '';
-      // validasi token terhadap base sumber
-      for (const t of tokens){
-        if (!isValidForBase(t, from)) {
-          throw new Error(`Token '${t}' tidak valid untuk base ${from.toUpperCase()}`);
-        }
+      if (rawTokens.length === 0) return '';
+      for (const { ok, token } of validateTokens(rawTokens, from)){
+        if (!ok) throw new Error(`Token '${token}' tidak valid untuk base ${from.toUpperCase()}`);
       }
-      const ints = parseFromBaseTokens(tokens, from);
-      return toTargetBaseStrings(ints, to).join(' ');
+      const ints = parseIntTokens(rawTokens, from);
+      return toBaseStrings(ints, to).join(' ');
     }
 
     return '';
   }
 
-  /* ---------- Event handlers ---------- */
+  function realtimeLint(){
+    const text = input.value;
+    const tokens = normSplitRaw(text);
+    const fromSel = fromBaseEl.value;
+
+    let baseForLint = fromSel;
+    let detected = '—';
+
+    if (fromSel === 'auto' && tokens.length){
+      const guess = detectBase(tokens);
+      if (guess){
+        baseForLint = guess;
+        detected = guess.toUpperCase();
+      } else {
+        baseForLint = 'dec'; // fallback
+        detected = 'Ambiguous';
+      }
+    } else if (fromSel !== 'auto'){
+      detected = fromSel.toUpperCase();
+    }
+
+    let specialHint = '';
+    if ((fromSel === 'auto' ? baseForLint === 'bin' : fromSel === 'bin') && toBaseEl.value === 'ascii'){
+      const joined = tokens.join('');
+      if (!/^[01]*$/.test(joined)) {
+        specialHint = 'Bukan biner 0/1';
+      } else if (joined.length > 0 && joined.length % 8 !== 0) {
+        specialHint = 'Panjang bit bukan kelipatan 8';
+      }
+    }
+
+    renderChips(tokens.map(t => ({token:t})), baseForLint, specialHint);
+    setDetectedBadge(detected);
+  }
+
   function doConvert(){
     try{
-      const res = convert(input.value, fromBase.value, toBase.value);
+      let from = fromBaseEl.value;
+      const text = input.value;
+      const tokens = normSplitRaw(text);
+
+      if (from === 'auto' && tokens.length){
+        const guess = detectBase(tokens);
+        if (!guess) throw new Error('Tidak dapat mendeteksi basis. Harap pilih From Base secara manual.');
+        from = guess;
+      }
+
+      const res = convert(text, from, toBaseEl.value);
       output.textContent = res;
       output.scrollTop = 0;
     }catch(e){
@@ -162,38 +238,51 @@
   function doReset(){
     input.value = '';
     output.textContent = '';
-    fromBase.value = 'dec';
-    toBase.value = 'hex';
+    fromBaseEl.value = 'auto';
+    toBaseEl.value = 'dec';
+    realtimeLint();
     input.focus();
   }
 
   function doSwap(){
-    const a = fromBase.value;
-    fromBase.value = toBase.value;
-    toBase.value = a;
+    let from = fromBaseEl.value;
+    const tokens = normSplitRaw(input.value);
+    if (from === 'auto' && tokens.length){
+      const guess = detectBase(tokens);
+      if (guess) from = guess;
+    }
 
-    // Jika swap ASCII dan basis lain & input kosong, beri contoh
+    const a = from;
+    const b = toBaseEl.value;
+
+    fromBaseEl.value = b === 'ascii' ? 'ascii' : b;
+    toBaseEl.value   = a === 'auto' ? 'dec' : a;
+
     if (!input.value.trim()){
-      if (fromBase.value === 'ascii'){
+      if (fromBaseEl.value === 'ascii'){
         input.value = 'Hello';
-      } else if (toBase.value === 'ascii' && fromBase.value === 'bin'){
+      } else if (toBaseEl.value === 'ascii' && fromBaseEl.value === 'bin'){
         input.value = '01001000 01100101 01101100 01101100 01101111';
       } else {
         input.value = '65 66 90';
       }
     }
+    realtimeLint();
     doConvert();
   }
 
-  /* ---------- Bind ---------- */
   btnConvert.addEventListener('click', doConvert);
   btnReset  .addEventListener('click', doReset);
   btnSwap   .addEventListener('click', doSwap);
 
-  [fromBase, toBase].forEach(el => el.addEventListener('change', () => {
-    // auto convert jika input ada
+  [fromBaseEl, toBaseEl].forEach(el => el.addEventListener('change', () => {
+    realtimeLint();
     if (input.value.trim()) doConvert();
   }));
+
+  input.addEventListener('input', () => {
+    realtimeLint();
+  });
 
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -210,5 +299,5 @@
     }
   });
 
-  // Convert awal (kalau ada placeholder dimodif user)
+  realtimeLint();
 })();

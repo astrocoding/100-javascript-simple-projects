@@ -14,7 +14,6 @@
       <p class="subtitle">Konversi Binary, Decimal, Octal, Hexadecimal, dan ASCII.</p>
     </header>
 
-    <!-- Bar input & pemilihan basis -->
     <section class="panel">
       <div class="row top-row">
         <label class="sr-only" for="input">Input</label>
@@ -24,8 +23,9 @@
           <div class="field">
             <label for="fromBase" class="label">From Base</label>
             <select id="fromBase" class="select">
+              <option value="auto" selected>Auto</option>
               <option value="bin">Binary</option>
-              <option value="dec" selected>Decimal</option>
+              <option value="dec">Decimal</option>
               <option value="oct">Octal</option>
               <option value="hex">Hexadecimal</option>
               <option value="ascii">ASCII</option>
@@ -36,9 +36,9 @@
             <label for="toBase" class="label">To Base</label>
             <select id="toBase" class="select">
               <option value="bin">Binary</option>
-              <option value="dec">Decimal</option>
+              <option value="dec" selected>Decimal</option>
               <option value="oct">Octal</option>
-              <option value="hex" selected>Hexadecimal</option>
+              <option value="hex">Hexadecimal</option>
               <option value="ascii">ASCII</option>
             </select>
           </div>
@@ -53,12 +53,13 @@
 
       <div class="row result-wrap">
         <div class="result-head">
-          <h2 class="result-title">Hasil</h2>
+          <h2 class="result-title">Hasil Konversi</h2>
           <button id="btnCopy" class="btn icon" title="Copy hasil"><i class="fa-solid fa-copy"></i></button>
         </div>
         <pre id="output" class="result" tabindex="0" aria-live="polite"></pre>
         <p id="helper" class="helper">
-          Tips: Pisahkan nilai dengan spasi/koma/baris. Untuk Binary→ASCII, Anda bisa menulis tanpa spasi (otomatis dipecah per 8 bit).
+          Tips: Pisahkan nilai dengan spasi/koma/baris. Binary→ASCII harus kelipatan 8 bit.
+          Mode <b>Auto</b> mendukung prefix <code>0b</code>, <code>0o</code>, <code>0x</code>.
         </p>
       </div>
     </section>
