@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>015 - Base Converter</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>🔢 Base Converter</h1>
+      <p class="subtitle">Konversi Binary, Decimal, Octal, Hexadecimal, dan ASCII.</p>
+    </header>
+
+    <!-- Bar input & pemilihan basis -->
+    <section class="panel">
+      <div class="row top-row">
+        <label class="sr-only" for="input">Input</label>
+        <textarea id="input" class="input" placeholder="Tulis angka/teks di sini..." autofocus></textarea>
+
+        <div class="side">
+          <div class="field">
+            <label for="fromBase" class="label">From Base</label>
+            <select id="fromBase" class="select">
+              <option value="bin">Binary</option>
+              <option value="dec" selected>Decimal</option>
+              <option value="oct">Octal</option>
+              <option value="hex">Hexadecimal</option>
+              <option value="ascii">ASCII</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="toBase" class="label">To Base</label>
+            <select id="toBase" class="select">
+              <option value="bin">Binary</option>
+              <option value="dec">Decimal</option>
+              <option value="oct">Octal</option>
+              <option value="hex" selected>Hexadecimal</option>
+              <option value="ascii">ASCII</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row actions">
+        <button id="btnConvert" class="btn primary"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Convert</span></button>
+        <button id="btnReset"   class="btn ghost"><i class="fa-solid fa-rotate-left"></i><span>Reset</span></button>
+        <button id="btnSwap"    class="btn accent" title="Tukar From/To"><i class="fa-solid fa-right-left"></i><span>Swap</span></button>
+      </div>
+
+      <div class="row result-wrap">
+        <div class="result-head">
+          <h2 class="result-title">Hasil</h2>
+          <button id="btnCopy" class="btn icon" title="Copy hasil"><i class="fa-solid fa-copy"></i></button>
+        </div>
+        <pre id="output" class="result" tabindex="0" aria-live="polite"></pre>
+        <p id="helper" class="helper">
+          Tips: Pisahkan nilai dengan spasi/koma/baris. Untuk Binary→ASCII, Anda bisa menulis tanpa spasi (otomatis dipecah per 8 bit).
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
