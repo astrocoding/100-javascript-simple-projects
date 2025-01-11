@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>016 - Camera Photo Capture</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>📸 Camera Photo Capture</h1>
+      <p class="subtitle">Tangkap foto dengan berbagai mode - normal, mirror, dan reverse untuk cek simetri wajah</p>
+    </header>
+
+    <section class="camera-panel">
+      <!-- Camera View -->
+      <div class="camera-container">
+        <video id="video" class="camera-video" autoplay playsinline muted></video>
+        <canvas id="canvas" class="camera-canvas" style="display: none;"></canvas>
+        
+        <!-- Overlay untuk mode simetri -->
+        <div id="symmetryOverlay" class="symmetry-overlay">
+          <div class="symmetry-line"></div>
+        </div>
+
+        <!-- Status Camera -->
+        <div id="cameraStatus" class="camera-status">
+          <i class="fa-solid fa-camera"></i>
+          <span>Tekan "Start Camera" untuk memulai</span>
+        </div>
+
+        <!-- Preview captured photo -->
+        <div id="photoPreview" class="photo-preview">
+          <img id="capturedPhoto" alt="Captured photo">
+          <div class="preview-actions">
+            <button id="retakeBtn" class="btn secondary">
+              <i class="fa-solid fa-camera-rotate"></i> Foto Ulang
+            </button>
+            <button id="saveBtn" class="btn primary">
+              <i class="fa-solid fa-download"></i> Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls-panel">
+        <!-- Camera Controls -->
+        <div class="control-group">
+          <h3>Camera Controls</h3>
+          <div class="button-row">
+            <button id="startCameraBtn" class="btn primary">
+              <i class="fa-solid fa-video"></i> Start Camera
+            </button>
+            <button id="stopCameraBtn" class="btn secondary" disabled>
+              <i class="fa-solid fa-video-slash"></i> Stop Camera
+            </button>
+          </div>
+          
+          <!-- Camera Selection -->
+          <div class="field">
+            <label for="cameraSelect">Pilih Kamera:</label>
+            <select id="cameraSelect" class="select">
+              <option value="">Memuat kamera...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Photo Mode -->
+        <div class="control-group">
+          <h3>Photo Mode</h3>
+          <div class="mode-buttons">
+            <button id="normalMode" class="mode-btn active" data-mode="normal">
+              <i class="fa-solid fa-camera"></i>
+              <span>Normal</span>
+            </button>
+            <button id="mirrorMode" class="mode-btn" data-mode="mirror">
+              <i class="fa-solid fa-arrows-left-right"></i>
+              <span>Mirror</span>
+            </button>
+            <button id="reverseMode" class="mode-btn" data-mode="reverse">
+              <i class="fa-solid fa-arrows-up-down"></i>
+              <span>Reverse</span>
+            </button>
+            <button id="symmetryMode" class="mode-btn" data-mode="symmetry">
+              <i class="fa-solid fa-face-smile"></i>
+              <span>Simetri</span>
+            </button>
+          </div>
+          <p class="mode-description">
+            Mode simetri membantu mengecek keseimbangan wajah dengan garis panduan
+          </p>
+        </div>
+
+        <!-- Photo Actions -->
+        <div class="control-group">
+          <h3>Photo Actions</h3>
+          <div class="button-row">
+            <button id="captureBtn" class="btn capture" disabled>
+              <i class="fa-solid fa-camera"></i> Ambil Foto
+            </button>
+          </div>
+          
+          <!-- Photo Settings -->
+          <div class="settings">
+            <div class="field">
+              <label for="photoQuality">Kualitas Foto:</label>
+              <select id="photoQuality" class="select">
+                <option value="0.9" selected>Tinggi (90%)</option>
+                <option value="0.8">Sedang (80%)</option>
+                <option value="0.7">Rendah (70%)</option>
+              </select>
+            </div>
+            
+            <div class="field">
+              <label for="photoFormat">Format:</label>
+              <select id="photoFormat" class="select">
+                <option value="image/jpeg" selected>JPEG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WebP</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="control-group">
+          <h3>Gallery</h3>
+          <div class="gallery-controls">
+            <button id="clearGalleryBtn" class="btn ghost">
+              <i class="fa-solid fa-trash"></i> Hapus Semua
+            </button>
+          </div>
+          <div id="photoGallery" class="photo-gallery">
+            <!-- Photos will be added here -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
