@@ -5,6 +5,7 @@
   const perPageSelect = document.getElementById('perPage');
   const pager = document.getElementById('pager');
   const rangeInfo = document.getElementById('rangeInfo');
+  const emptyState = document.getElementById('emptyState');
 
   let state = {
     q: '',
@@ -38,11 +39,13 @@
 
     const startIdx = (state.page - 1) * state.perPage;
     const endIdx = Math.min(startIdx + state.perPage, total);
-    filtered.slice(startIdx, endIdx).forEach(el => (el.style.display = ''));
+    filtered.slice(startIdx, endIdx).forEach(el => (el.style.display = 'flex'));
 
     if (total === 0) {
+      if (emptyState) emptyState.style.display = 'block';
       rangeInfo.textContent = 'Tidak ada entri yang cocok.';
     } else {
+      if (emptyState) emptyState.style.display = 'none';
       rangeInfo.textContent = `Menampilkan ${startIdx + 1}–${endIdx} dari ${total} entri`;
     }
 
@@ -55,12 +58,14 @@
 
     const prev = document.createElement('button');
     prev.className = 'page-btn';
-    prev.textContent = '‹';
+    prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    prev.setAttribute('aria-label', 'Halaman Sebelumnya');
     prev.disabled = state.page === 1;
     prev.addEventListener('click', () => {
       if (state.page > 1) {
         state.page--;
         render();
+        scrollToTop();
       }
     });
     pager.appendChild(prev);
@@ -82,6 +87,7 @@
         b.addEventListener('click', () => {
           state.page = p;
           render();
+          scrollToTop();
         });
         pager.appendChild(b);
       }
@@ -89,12 +95,14 @@
 
     const next = document.createElement('button');
     next.className = 'page-btn';
-    next.textContent = '›';
+    next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    next.setAttribute('aria-label', 'Halaman Berikutnya');
     next.disabled = state.page === totalPages;
     next.addEventListener('click', () => {
       if (state.page < totalPages) {
         state.page++;
         render();
+        scrollToTop();
       }
     });
     pager.appendChild(next);
@@ -129,6 +137,10 @@
     };
   }
 
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function updateURL() {
     const url = new URL(window.location);
     url.searchParams.set('q', state.q);
@@ -149,6 +161,18 @@
     perPageSelect.value = String(state.perPage);
   }
 
+  /* Keyboard shortcut handler: ⌘K or Ctrl+K or / */
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    } else if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
+
   searchInput.addEventListener('input', debounce(() => {
     state.q = searchInput.value.trim();
     state.page = 1;
@@ -164,20 +188,3 @@
   readURL();
   render();
 })();
-
-const searchBtn = document.getElementById('searchBtn');
-
-searchBtn.addEventListener('click', () => {
-  state.q = searchInput.value.trim();
-  state.page = 1;
-  render();
-});
-
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    state.q = searchInput.value.trim();
-    state.page = 1;
-    render();
-  }
-});
