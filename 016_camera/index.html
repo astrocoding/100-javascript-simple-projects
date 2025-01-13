@@ -1,149 +1,198 @@
 <!doctype html>
 <html lang="id">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>016 - Camera Photo Capture</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 </head>
+
 <body>
   <main class="container">
+    <!-- Clean Header (No Emoji) -->
     <header class="header">
-      <h1>📸 Camera Photo Capture</h1>
+      <h1 class="header-title">
+        <i class="fa-solid fa-camera title-icon" aria-hidden="true"></i>
+        <span>Camera Photo Capture</span>
+      </h1>
       <p class="subtitle">Tangkap foto dengan berbagai mode - normal, mirror, dan reverse untuk cek simetri wajah</p>
     </header>
 
+    <!-- Main Camera Layout -->
     <section class="camera-panel">
-      <!-- Camera View -->
+      <!-- Camera Viewfinder Side -->
       <div class="camera-container">
         <video id="video" class="camera-video" autoplay playsinline muted></video>
         <canvas id="canvas" class="camera-canvas" style="display: none;"></canvas>
-        
-        <!-- Overlay untuk mode simetri -->
+
+        <!-- Overlay mode simetri -->
         <div id="symmetryOverlay" class="symmetry-overlay">
           <div class="symmetry-line"></div>
         </div>
 
-        <!-- Status Camera -->
+        <!-- Status Camera State -->
         <div id="cameraStatus" class="camera-status">
-          <i class="fa-solid fa-camera"></i>
-          <span>Tekan "Start Camera" untuk memulai</span>
+          <i class="fa-solid fa-video-slash status-icon"></i>
+          <span>Tekan "ON" untuk memulai</span>
         </div>
 
-        <!-- Preview captured photo -->
+        <!-- Preview Captured Photo Overlay -->
         <div id="photoPreview" class="photo-preview">
-          <img id="capturedPhoto" alt="Captured photo">
+          <img id="capturedPhoto" alt="Hasil tangkapan foto">
           <div class="preview-actions">
-            <button id="retakeBtn" class="btn secondary">
-              <i class="fa-solid fa-camera-rotate"></i> Foto Ulang
+            <button id="retakeBtn" class="btn btn-secondary">
+              <i class="fa-solid fa-rotate-left"></i> Foto Ulang
             </button>
-            <button id="saveBtn" class="btn primary">
+            <button id="saveBtn" class="btn btn-primary">
               <i class="fa-solid fa-download"></i> Simpan
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Controls -->
+      <!-- Controls & Settings Side -->
       <div class="controls-panel">
-        <!-- Camera Controls -->
+        <!-- Group 1: Camera Controls -->
         <div class="control-group">
-          <h3>Camera Controls</h3>
+          <h2 class="group-title">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Kontrol Kamera</span>
+          </h2>
           <div class="button-row">
-            <button id="startCameraBtn" class="btn primary">
-              <i class="fa-solid fa-video"></i> Start Camera
+            <button id="startCameraBtn" class="btn btn-primary">
+              <i class="fa-solid fa-video"></i> ON
             </button>
-            <button id="stopCameraBtn" class="btn secondary" disabled>
-              <i class="fa-solid fa-video-slash"></i> Stop Camera
+            <button id="stopCameraBtn" class="btn btn-off" disabled>
+              <i class="fa-solid fa-video-slash"></i> OFF
             </button>
           </div>
-          
-          <!-- Camera Selection -->
+
           <div class="field">
-            <label for="cameraSelect">Pilih Kamera:</label>
-            <select id="cameraSelect" class="select">
-              <option value="">Memuat kamera...</option>
-            </select>
+            <label for="cameraSelect" class="field-label">Pilih Kamera:</label>
+            <div class="select-wrapper">
+              <select id="cameraSelect" class="select-input">
+                <option value="">Memuat kamera...</option>
+              </select>
+              <i class="fa-solid fa-chevron-down select-arrow"></i>
+            </div>
           </div>
         </div>
 
-        <!-- Photo Mode -->
+        <!-- Group 2: Photo Modes -->
         <div class="control-group">
-          <h3>Photo Mode</h3>
-          <div class="mode-buttons">
-            <button id="normalMode" class="mode-btn active" data-mode="normal">
+          <h2 class="group-title">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Mode Foto</span>
+          </h2>
+          <div class="mode-grid">
+            <button type="button" class="mode-btn active" data-mode="normal">
               <i class="fa-solid fa-camera"></i>
               <span>Normal</span>
             </button>
-            <button id="mirrorMode" class="mode-btn" data-mode="mirror">
+            <button type="button" class="mode-btn" data-mode="mirror">
               <i class="fa-solid fa-arrows-left-right"></i>
               <span>Mirror</span>
             </button>
-            <button id="reverseMode" class="mode-btn" data-mode="reverse">
+            <button type="button" class="mode-btn" data-mode="reverse">
               <i class="fa-solid fa-arrows-up-down"></i>
               <span>Reverse</span>
             </button>
-            <button id="symmetryMode" class="mode-btn" data-mode="symmetry">
+            <button type="button" class="mode-btn" data-mode="symmetry">
               <i class="fa-solid fa-face-smile"></i>
               <span>Simetri</span>
             </button>
           </div>
-          <p class="mode-description">
-            Mode simetri membantu mengecek keseimbangan wajah dengan garis panduan
+          <p class="mode-hint">
+            <i class="fa-solid fa-circle-info"></i> Mode simetri menampilkan garis panduan keseimbangan wajah
           </p>
         </div>
 
-        <!-- Photo Actions -->
+        <!-- Group 3: Capture & Format Settings -->
         <div class="control-group">
-          <h3>Photo Actions</h3>
+          <h2 class="group-title">
+            <i class="fa-solid fa-gear"></i>
+            <span>Pengaturan & Tangkapan</span>
+          </h2>
           <div class="button-row">
-            <button id="captureBtn" class="btn capture" disabled>
+            <button id="captureBtn" class="btn btn-capture" disabled>
               <i class="fa-solid fa-camera"></i> Ambil Foto
             </button>
           </div>
-          
-          <!-- Photo Settings -->
-          <div class="settings">
+
+          <div class="settings-grid">
             <div class="field">
-              <label for="photoQuality">Kualitas Foto:</label>
-              <select id="photoQuality" class="select">
-                <option value="0.9" selected>Tinggi (90%)</option>
-                <option value="0.8">Sedang (80%)</option>
-                <option value="0.7">Rendah (70%)</option>
-              </select>
+              <label for="photoQuality" class="field-label">Kualitas:</label>
+              <div class="select-wrapper">
+                <select id="photoQuality" class="select-input">
+                  <option value="0.9" selected>Tinggi (90%)</option>
+                  <option value="0.8">Sedang (80%)</option>
+                  <option value="0.7">Rendah (70%)</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-arrow"></i>
+              </div>
             </div>
-            
+
             <div class="field">
-              <label for="photoFormat">Format:</label>
-              <select id="photoFormat" class="select">
-                <option value="image/jpeg" selected>JPEG</option>
-                <option value="image/png">PNG</option>
-                <option value="image/webp">WebP</option>
-              </select>
+              <label for="photoFormat" class="field-label">Format:</label>
+              <div class="select-wrapper">
+                <select id="photoFormat" class="select-input">
+                  <option value="image/jpeg" selected>JPEG</option>
+                  <option value="image/png">PNG</option>
+                  <option value="image/webp">WebP</option>
+                </select>
+                <i class="fa-solid fa-chevron-down select-arrow"></i>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Photo Gallery -->
+        <!-- Group 4: Photo Gallery -->
         <div class="control-group">
-          <h3>Gallery</h3>
-          <div class="gallery-controls">
-            <button id="clearGalleryBtn" class="btn ghost">
-              <i class="fa-solid fa-trash"></i> Hapus Semua
+          <div class="group-header">
+            <h2 class="group-title">
+              <i class="fa-solid fa-images"></i>
+              <span>Galeri Foto</span>
+            </h2>
+            <button id="clearGalleryBtn" class="btn-text-danger" type="button">
+              <i class="fa-solid fa-trash-can"></i> Hapus Semua
             </button>
           </div>
           <div id="photoGallery" class="photo-gallery">
-            <!-- Photos will be added here -->
+            <!-- Dynamic Gallery Thumbnails -->
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Toast Container -->
-  <div id="toastContainer" class="toast-container"></div>
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Custom Confirmation Modal (No Browser Native Prompt/Confirm) -->
+  <div id="confirmModal" class="confirm-modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="confirm-modal-box">
+      <div class="confirm-modal-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 id="confirmTitle" class="confirm-modal-title">Konfirmasi Hapus</h3>
+      <p id="confirmMessage" class="confirm-modal-message">Apakah Anda yakin ingin menghapus semua foto dari galeri?</p>
+      <div class="confirm-modal-actions">
+        <button id="cancelConfirmBtn" type="button" class="btn btn-secondary">Batal</button>
+        <button id="acceptConfirmBtn" type="button" class="btn btn-danger-solid">
+          <i class="fa-solid fa-trash-can"></i> Hapus
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js" defer></script>
 </body>
+
 </html>
