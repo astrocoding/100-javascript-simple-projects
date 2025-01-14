@@ -1,29 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Password Generator | Zaenal Alfian</title>
-  <link rel="stylesheet" href="./styles.css">
+  <title>005 - Password Generator</title>
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Password Generator</h1>
-    <div class="strength">
-      <label><input type="radio" name="strength" value="low"> Low</label>
-      <label><input type="radio" name="strength" value="medium" checked> Medium</label>
-      <label><input type="radio" name="strength" value="strong"> Strong</label>
-    </div>
-    <div class="password-box">
-      <input type="text" id="password" readonly placeholder="Your password will appear here">
-      <button id="generate-btn">Generate</button>
-      <button id="copy-btn">Copy</button>
-    </div>
-    <div class="brand">
-      <span>Made by Zaenal Alfian</span>
-    </div>
-  </div>
+  <main class="page-wrapper">
+    <!-- Password Generator Card (Matching attached UI layout) -->
+    <article class="generator-card" role="region" aria-label="Password Generator">
+      <!-- Metallic corner rivets -->
+      <span class="corner-rivet top-left" aria-hidden="true"></span>
+      <span class="corner-rivet top-right" aria-hidden="true"></span>
+      <span class="corner-rivet bottom-left" aria-hidden="true"></span>
+      <span class="corner-rivet bottom-right" aria-hidden="true"></span>
 
-  <script src="./script.js"></script>
+      <!-- Header Title & Subtitle -->
+      <header class="card-header">
+        <h1 class="card-title">Password generator</h1>
+        <p class="card-subtitle">Generate strong unique passwords</p>
+      </header>
+
+      <!-- Password Output & Actions Container -->
+      <section class="display-section">
+        <div class="password-display-box">
+          <input type="text" id="passwordOutput" class="password-output" readonly aria-label="Generated Password">
+          <div class="action-buttons">
+            <button id="copyBtn" type="button" class="btn btn-action btn-copy" aria-label="Salin password">
+              <i class="fa-solid fa-copy" aria-hidden="true"></i>
+              <span id="copyBtnText">Copy</span>
+            </button>
+            <button id="refreshBtn" type="button" class="btn btn-action btn-icon" title="Regenerate password" aria-label="Buat ulang password">
+              <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Strength Feedback Banner -->
+        <div id="strengthBanner" class="strength-banner moderate">
+          <span id="strengthText">Moderate: Not bad, but not Fort Knox either.</span>
+        </div>
+      </section>
+
+      <!-- Options & Controls Form -->
+      <form class="options-form" onsubmit="event.preventDefault();">
+        <!-- Password Length Slider -->
+        <div class="option-row length-row">
+          <div class="length-header">
+            <label for="lengthSlider" class="option-label">Password length</label>
+            <span id="lengthValue" class="length-value">12</span>
+          </div>
+          <div class="slider-wrapper">
+            <input type="range" id="lengthSlider" min="6" max="32" value="12" class="custom-range" aria-label="Panjang Password">
+          </div>
+        </div>
+
+        <!-- Option Toggles -->
+        <div class="option-row toggle-row">
+          <label for="includeUppercase" class="option-label">Include Uppercase Letters</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="includeUppercase" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="option-row toggle-row">
+          <label for="includeLowercase" class="option-label">Include Lowercase Letters</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="includeLowercase" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="option-row toggle-row">
+          <label for="includeNumbers" class="option-label">Include Numbers</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="includeNumbers" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="option-row toggle-row">
+          <label for="includeSymbols" class="option-label">Include Symbols</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="includeSymbols" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </form>
+    </article>
+  </main>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
