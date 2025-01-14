@@ -12,7 +12,35 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+  padding: 20px 10px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #1e1e1e;
+  color: #00bfff;
+  border: 1px solid #00bfff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: #00bfff;
+  color: #121212;
+  transform: translateX(-2px);
 }
 
 .container {

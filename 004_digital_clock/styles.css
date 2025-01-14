@@ -12,7 +12,37 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+  padding: 20px 10px;
+}
+
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #222;
+  color: #4786fa;
+  border: 1.5px solid #444;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: #4786fa;
+  color: #fff;
+  border-color: #4786fa;
+  transform: translateX(-2px);
 }
 
 .clock-container {
