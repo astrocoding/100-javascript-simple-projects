@@ -37,6 +37,31 @@ body{
   padding:28px 16px 40px;
   display:grid;
   gap:18px;
+  position:relative;
+}
+
+.back-btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--card);
+  color: var(--acc-10);
+  border: 1px solid var(--sec-30);
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: var(--acc-10);
+  color: #fff;
+  border-color: var(--acc-10);
+  transform: translateX(-2px);
 }
 .header h1{margin:0 0 6px 0; font-size:1.9rem; color:var(--acc-10)}
 .subtitle{margin:0; color:var(--muted)}

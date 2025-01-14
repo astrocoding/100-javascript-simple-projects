@@ -56,6 +56,36 @@ html, body {
 .header {
   text-align: center;
   margin-bottom: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--surface);
+  color: var(--sky-hover);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: var(--sky-primary);
+  color: #ffffff;
+  border-color: var(--sky-primary);
+  transform: translateX(-2px);
 }
 
 .header-title {

@@ -30,6 +30,31 @@ body{
   padding:28px 16px 40px;
   display:grid;
   gap:18px;
+  position:relative;
+}
+
+.back-btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--card);
+  color: var(--primary-700);
+  border: 1px solid #e6e0ff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(124, 93, 246, 0.12);
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: translateX(-2px);
 }
 
 .header h1{margin:0 0 6px 0; font-size:1.8rem}
