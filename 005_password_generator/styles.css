@@ -42,17 +42,28 @@ body {
 
 .page-wrapper {
   width: 100%;
-  padding: 1.5rem 1rem;
+  min-height: 100vh;
+  padding: 2rem 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+}
+
+.card-wrapper {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .back-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -65,7 +76,6 @@ body {
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
-  z-index: 100;
 }
 
 .back-btn:hover {
