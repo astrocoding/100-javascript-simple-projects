@@ -13,14 +13,19 @@ body {
   align-items: center;
   min-height: 100vh;
   color: #333;
-  position: relative;
   padding: 20px 10px;
 }
 
+.card-wrapper {
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .back-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -33,7 +38,6 @@ body {
   font-weight: bold;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   transition: all 0.2s ease;
-  z-index: 100;
 }
 
 .back-btn:hover {
@@ -43,8 +47,7 @@ body {
 
 .container {
   text-align: center;
-  max-width: 400px;
-  width: 90%;
+  width: 100%;
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;

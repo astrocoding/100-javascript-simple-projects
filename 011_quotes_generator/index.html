@@ -9,35 +9,37 @@
 </head>
 <body>
   <main class="container">
-    <a href="../index.html" class="back-btn" aria-label="Kembali ke katalog proyek">
-      <i class="fa-solid fa-arrow-left"></i>
-      <span>Kembali</span>
-    </a>
+    <div class="card-wrap">
+      <a href="../index.html" class="back-btn" aria-label="Kembali ke katalog proyek">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Kembali</span>
+      </a>
 
-    <section class="card" aria-live="polite">
-      <div class="quote">
-        <i class="fa-solid fa-quote-left quote-mark" aria-hidden="true"></i>
-        <p id="quoteText">Klik “Quote Baru” untuk mulai ✨</p>
-      </div>
-      <p id="quoteAuthor" class="author">—</p>
+      <section class="card" aria-live="polite">
+        <div class="quote">
+          <i class="fa-solid fa-quote-left quote-mark" aria-hidden="true"></i>
+          <p id="quoteText">Klik “Quote Baru” untuk mulai ✨</p>
+        </div>
+        <p id="quoteAuthor" class="author">—</p>
 
-      <div class="actions">
-        <button id="btnNew" class="btn primary">
-          <i class="fa-solid fa-shuffle"></i>
-          <span>Quote Baru</span>
-        </button>
-        <button id="btnCopy" class="btn ghost" title="Salin (C)">
-          <i class="fa-solid fa-copy"></i>
-          <span>Salin</span>
-        </button>
-        <button id="btnTweet" class="btn ghost" title="Tweet (T)">
-          <i class="fa-brands fa-x-twitter"></i>
-          <span>Tweet</span>
-        </button>
-      </div>
+        <div class="actions">
+          <button id="btnNew" class="btn primary">
+            <i class="fa-solid fa-shuffle"></i>
+            <span>Quote Baru</span>
+          </button>
+          <button id="btnCopy" class="btn ghost" title="Salin (C)">
+            <i class="fa-solid fa-copy"></i>
+            <span>Salin</span>
+          </button>
+          <button id="btnTweet" class="btn ghost" title="Tweet (T)">
+            <i class="fa-brands fa-x-twitter"></i>
+            <span>Tweet</span>
+          </button>
+        </div>
 
-      <p class="hint">CTRL+N = Baru, CTRL+C = Salin, CTRL+T = Tweet</p>
-    </section>
+        <p class="hint">CTRL+N = Baru, CTRL+C = Salin, CTRL+T = Tweet</p>
+      </section>
+    </div>
   </main>
 
   <script src="script.js" defer></script>
